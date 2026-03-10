@@ -10,7 +10,7 @@ int main() {
     int failedCount = 0;
 
     cout << "Enter Student Full Name: ";
-    getline(cin, studentName);
+     cin >> studentName;
 
     for(int i = 0; i < 6; i++) {
         cout << "Enter grade for " << subjects[i] << ": ";
@@ -38,4 +38,5 @@ int main() {
     }
 
     return 0;
-}
+}       
+
