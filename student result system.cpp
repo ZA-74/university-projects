@@ -1,12 +1,12 @@
 #include <iostream>
 #include <string>
-
+#include <iomanip>
 using namespace std;
 
 int main() {
     string studentName;
     float grades[6], sum = 0;
-    string subjects[6] = {"calculus", "Programming", "IT fundemntals", "arabic", "digital Logic", "copmputer organizations"};
+    string subjects[6] = {"calculus", "Programming", " IT Fundamentals", "arabic", "digital Logic", " Computer Organization"};
     int failedCount = 0;
 
     cout << "Enter Student Full Name: ";
@@ -42,6 +42,6 @@ int main() {
         else cout << "Fail" << endl;
     }
 
-    return 0;
+    return 0; 
 }       
 
