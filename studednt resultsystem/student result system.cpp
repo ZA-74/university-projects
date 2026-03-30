@@ -12,13 +12,18 @@ int main() {
     cout << "Enter Student Full Name: ";
      getline(cin >> ws, studentName);
 
-    for(int i = 0; i < 6; i++) {
-        cout << "Enter grade for " << subjects[i] << ": ";
-        cin >> grades[i];
+    for(int i = 0; i < 6; i++)
+        do {
+            cout << "Enter grade for " << subjects[i] << " (0-100): ";
+            cin >> grades[i];
+            if (grades[i] < 0 || grades[i] > 100) {
+                cout << "Invalid input! Please enter a grade between 0 and 100." << endl;
+            }
+        } while (grades[i] < 0 || grades[i] > 100);
+
         if(grades[i] < 50) failedCount++;
         sum += grades[i];
-    }
-
+        
     float average = sum / 6;
 
     cout << "\n---- FINAL REPORT ----" << endl;
