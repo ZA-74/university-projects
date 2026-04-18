@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منظم الملفات الذكي</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-1: #f4f7fb;
+            --bg-2: #e9eef6;
+            --surface: #ffffff;
+            --surface-soft: #f9fbfd;
+            --border: #d8e0ea;
+            --text-main: #142033;
+            --text-soft: #5b677a;
+            --primary: #1f4ea3;
+            --primary-2: #2d68cc;
+            --success: #2e7d32;
+            --error: #c62828;
+            --shadow: 0 16px 36px rgba(20, 32, 51, 0.12);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(145deg, var(--bg-1), var(--bg-2));
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: var(--text-main);
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            background: var(--surface);
+            border-radius: 18px;
+            box-shadow: var(--shadow);
+            max-width: 600px;
+            width: 100%;
+            overflow: hidden;
+            animation: slideUp 0.45s ease-out;
+            border: 1px solid var(--border);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #142b57 0%, #1f4ea3 100%);
+            color: white;
+            padding: 42px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(120deg, rgba(255, 255, 255, 0.08), transparent 45%);
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 800;
+            position: relative;
+            z-index: 1;
+            letter-spacing: 0.3px;
+        }
+
+        @keyframes textPulse {
+            0%, 100% { text-shadow: 0 0 20px rgba(255,255,255,0.3); }
+            50% { text-shadow: 0 0 30px rgba(255,255,255,0.6); }
+        }
+
+        .header p {
+            font-size: 1.08em;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .content {
+            padding: 40px 30px;
+            animation: fadeIn 0.8s ease-out 0.3s both;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--text-main);
+            font-weight: 700;
+            font-size: 1em;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 15px 18px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 1em;
+            transition: all 0.25s ease;
+            background: var(--surface-soft);
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary-2);
+            box-shadow: 0 0 0 3px rgba(45, 104, 204, 0.18);
+            background: white;
+        }
+
+        input[type="text"]::placeholder {
+            color: #bbb;
+            transition: color 0.3s ease;
+        }
+
+        input[type="text"]:focus::placeholder {
+            color: #999;
+        }
+
+        .btn-browse {
+            padding: 15px 25px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1em;
+            transition: all 0.25s ease;
+            box-shadow: 0 8px 18px rgba(31, 78, 163, 0.25);
+        }
+
+        .btn-browse:hover {
+            background: linear-gradient(135deg, #173d80 0%, #2457ad 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 10px 22px rgba(31, 78, 163, 0.32);
+        }
+
+        .btn-browse:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-organize {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #173d80 0%, #1f4ea3 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.05em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            margin-top: 20px;
+            box-shadow: 0 12px 24px rgba(23, 61, 128, 0.28);
+        }
+
+        .btn-organize:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 26px rgba(23, 61, 128, 0.35);
+        }
+
+        .btn-organize:active {
+            transform: translateY(-1px) scale(0.98);
+        }
+
+        .btn-organize:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .result-box {
+            margin-top: 30px;
+            padding: 25px;
+            background: var(--surface-soft);
+            border-radius: 12px;
+            display: none;
+            border-right: 4px solid var(--primary);
+            animation: slideInUp 0.35s ease;
+            box-shadow: 0 10px 24px rgba(20, 32, 51, 0.08);
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-box.success {
+            background: linear-gradient(135deg, #e8f5ea 0%, #f4fbf5 100%);
+            border-right-color: var(--success);
+        }
+
+        .result-box.error {
+            background: linear-gradient(135deg, #fdebea 0%, #fff5f5 100%);
+            border-right-color: var(--error);
+        }
+
+        .result-box.success h3 {
+            color: var(--success);
+        }
+
+        .result-box.error h3 {
+            color: var(--error);
+        }
+
+        .result-box h3 {
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            animation: slideInLeft 0.4s ease-out;
+        }
+
+        .result-box p {
+            color: var(--text-soft);
+            line-height: 1.8;
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-size: 0.95em;
+            animation: fadeIn 0.6s ease-out 0.2s both;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+            animation: fadeIn 0.8s ease-out 0.4s both;
+        }
+
+        .stat-item {
+            background: linear-gradient(135deg, rgba(31, 78, 163, 0.05) 0%, rgba(45, 104, 204, 0.05) 100%);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(31, 78, 163, 0.18);
+            transition: all 0.25s ease;
+            cursor: pointer;
+        }
+
+        .stat-item:hover {
+            border-color: var(--primary-2);
+            background: linear-gradient(135deg, rgba(31, 78, 163, 0.1) 0%, rgba(45, 104, 204, 0.1) 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 18px rgba(31, 78, 163, 0.16);
+        }
+
+        .stat-item h4 {
+            color: var(--primary);
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .stat-item p {
+            font-size: 1.8em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #1f4ea3, #2d68cc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 30px;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .spinner {
+            position: relative;
+            width: 50px;
+            height: 50px;
+            margin: 0 auto;
+        }
+
+        .spinner::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 4px solid rgba(31, 78, 163, 0.1);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1.5s linear infinite;
+            box-shadow: 0 0 20px rgba(31, 78, 163, 0.22);
+        }
+
+        .spinner::after {
+            content: '';
+            position: absolute;
+            width: 80%;
+            height: 80%;
+            top: 10%;
+            left: 10%;
+            border: 3px solid rgba(45, 104, 204, 0.12);
+            border-right: 3px solid var(--primary-2);
+            border-radius: 50%;
+            animation: spin 2s linear infinite reverse;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading p {
+            margin-top: 20px;
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1.1em;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        .file-categories {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .category-box {
+            background: linear-gradient(135deg, rgba(31, 78, 163, 0.06) 0%, rgba(45, 104, 204, 0.06) 100%);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(31, 78, 163, 0.14);
+            transition: all 0.25s ease;
+            cursor: pointer;
+            animation: slideUp 0.35s ease backwards;
+        }
+
+        .category-box:nth-child(1) { animation-delay: 0s; }
+        .category-box:nth-child(2) { animation-delay: 0.1s; }
+        .category-box:nth-child(3) { animation-delay: 0.2s; }
+        .category-box:nth-child(4) { animation-delay: 0.3s; }
+
+        .category-box:hover {
+            border-color: var(--primary-2);
+            background: linear-gradient(135deg, rgba(31, 78, 163, 0.12) 0%, rgba(45, 104, 204, 0.12) 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 22px rgba(31, 78, 163, 0.16);
+        }
+
+        .category-box h4 {
+            background: linear-gradient(135deg, #1f4ea3, #2d68cc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            font-size: 1em;
+            font-weight: 800;
+        }
+
+        .category-box p {
+            color: var(--text-soft);
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .content {
+                padding: 25px 15px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .container { border-radius: 14px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📁 منظم الملفات</h1>
+            <p>نظم ملفاتك بذكاء وسهولة</p>
+        </div>
+
+        <div class="content">
+            <div class="form-group">
+                <label for="pathInput">🎯 اختر مسار المجلد</label>
+                <div class="input-wrapper">
+                    <input 
+                        type="text" 
+                        id="pathInput" 
+                        placeholder="مثال: C:\Users\Downloads"
+                        value=""
+                    >
+                    <button class="btn-browse" onclick="browsePath()">استعرض</button>
+                </div>
+            </div>
+
+            <div class="file-categories">
+                <div class="category-box">
+                    <h4>📄 الوثائق</h4>
+                    <p>.pdf, .docx</p>
+                </div>
+                <div class="category-box">
+                    <h4>🖼️ الصور</h4>
+                    <p>.jpg, .png</p>
+                </div>
+                <div class="category-box">
+                    <h4>💻 البرمجة</h4>
+                    <p>.cpp, .py</p>
+                </div>
+                <div class="category-box">
+                    <h4>📦 أخرى</h4>
+                    <p>الملفات الأخرى</p>
+                </div>
+            </div>
+
+            <button class="btn-organize" onclick="organizeFiles()">
+                ✨ تنظيم الملفات الآن
+            </button>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p style="margin-top: 15px; color: #667eea;">جاري التنظيم...</p>
+            </div>
+
+            <div class="result-box" id="resultBox">
+                <h3 id="resultTitle">✅ تم بنجاح!</h3>
+                <p id="resultText"></p>
+            </div>
+
+            <div class="stats" id="stats" style="display: none;">
+                <div class="stat-item">
+                    <h4>الملفات المنقولة</h4>
+                    <p id="movedCount">0</p>
+                </div>
+                <div class="stat-item">
+                    <h4>المجلدات المنشأة</h4>
+                    <p id="foldersCount">0</p>
+                </div>
+                <div class="stat-item">
+                    <h4>الحالة</h4>
+                    <p id="status">✅</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // إضافة تأثيرات عند تحميل الصفحة
+        window.addEventListener('load', () => {
+            document.querySelectorAll('.category-box').forEach(box => {
+                box.addEventListener('mouseenter', function() {
+                    this.style.animation = 'none';
+                    setTimeout(() => {
+                        this.style.animation = '';
+                    }, 10);
+                });
+            });
+        });
+
+        // تأثير على المدخل النصي
+        const pathInput = document.getElementById('pathInput');
+        
+        pathInput.addEventListener('focus', function() {
+            this.style.transform = 'scale(1.02)';
+        });
+
+        pathInput.addEventListener('blur', function() {
+            this.style.transform = 'scale(1)';
+        });
+
+        // تأثير الكتابة
+        pathInput.addEventListener('input', function() {
+            if (this.value.length > 0) {
+                this.style.boxShadow = '0 5px 16px rgba(31, 78, 163, 0.18)';
+            } else {
+                this.style.boxShadow = '';
+            }
+        });
+
+        function browsePath() {
+            const btn = event.target;
+            btn.textContent = '⏳ جاري...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                const path = prompt('أدخل مسار المجلد الكامل:\nمثال: C:\\Users\\Downloads');
+                if (path) {
+                    pathInput.value = path;
+                    pathInput.style.boxShadow = '0 6px 18px rgba(31, 78, 163, 0.24)';
+                    
+                    // تأثير النبض
+                    pathInput.classList.add('pulse-input');
+                    setTimeout(() => {
+                        pathInput.classList.remove('pulse-input');
+                    }, 600);
+                }
+                
+                btn.textContent = 'استعرض';
+                btn.disabled = false;
+            }, 300);
+        }
+
+        async function organizeFiles() {
+            const path = document.getElementById('pathInput').value.trim();
+            const btn = event.target;
+
+            if (!path) {
+                showError('❌ من فضلك أدخل مسار المجلد');
+                shakeElement(pathInput);
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = '⏳ جاري التنظيم...';
+
+            const loading = document.getElementById('loading');
+            const resultBox = document.getElementById('resultBox');
+            const stats = document.getElementById('stats');
+            
+            loading.style.display = 'block';
+            resultBox.style.display = 'none';
+            stats.style.display = 'none';
+
+            try {
+                const response = await fetch('/api/organize', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ path })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    throw new Error(data.message || 'فشل تنفيذ العملية');
+                }
+
+                showSuccessResult(data);
+            } catch (error) {
+                showError(`❌ ${error.message}`);
+            } finally {
+                loading.style.display = 'none';
+                btn.disabled = false;
+                btn.textContent = '✨ تنظيم الملفات الآن';
+            }
+        }
+
+        function showSuccessResult(data) {
+            const loading = document.getElementById('loading');
+            const resultBox = document.getElementById('resultBox');
+            const movedCount = Number(data.movedCount || 0);
+            const docCount = Number(data.documents || 0);
+            const imgCount = Number(data.images || 0);
+            const progCount = Number(data.programming || 0);
+            const otherCount = Number(data.others || 0);
+            const folderCount = Number(data.foldersCount || 0);
+            const path = data.path || '';
+            const programOutput = data.rawOutput || '';
+
+            const result = `
+التقرير النهائي:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📍 المسار: ${path}
+📊 عدد الملفات المنقولة: ${movedCount}
+
+التفاصيل:
+📄 الوثائق (Documents): ${docCount} ملفات
+🖼️ الصور (Images): ${imgCount} ملفات
+💻 البرمجة (Programming): ${progCount} ملفات
+📦 أخرى (Others): ${otherCount} ملفات
+
+✅ تم تنظيم الملفات بنجاح!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+${programOutput ? '\nمخرجات البرنامج:\n' + programOutput : ''}`;
+
+            loading.style.display = 'none';
+            resultBox.classList.remove('error');
+            resultBox.classList.add('success');
+            document.getElementById('resultTitle').textContent = '✅ اكتمل التنظيم بنجاح!';
+            document.getElementById('resultText').textContent = result;
+            resultBox.style.display = 'block';
+
+            showStats(movedCount, folderCount);
+            
+            confetti();
+        }
+
+        function showError(message) {
+            const resultBox = document.getElementById('resultBox');
+            resultBox.classList.remove('success');
+            resultBox.classList.add('error');
+            document.getElementById('resultTitle').textContent = '❌ حدث خطأ';
+            document.getElementById('resultText').textContent = message;
+            resultBox.style.display = 'block';
+        }
+
+        function showStats(movedCount, foldersCount) {
+            const stats = document.getElementById('stats');
+            const movedCountElem = document.getElementById('movedCount');
+            const foldersCountElem = document.getElementById('foldersCount');
+            const statusElem = document.getElementById('status');
+
+            animateCounter(movedCountElem, movedCount, 500);
+            animateCounter(foldersCountElem, foldersCount, 400);
+            
+            statusElem.textContent = '✅ ناجح';
+            statusElem.style.color = '#2e7d32';
+
+            stats.style.display = 'grid';
+        }
+
+        function animateCounter(element, targetValue, duration) {
+            const startValue = 0;
+            const startTime = Date.now();
+
+            function update() {
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const currentValue = Math.floor(startValue + (targetValue - startValue) * progress);
+                element.textContent = currentValue;
+
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+
+            update();
+        }
+
+        function shakeElement(element) {
+            element.style.animation = 'none';
+            setTimeout(() => {
+                element.style.animation = 'shake 0.5s ease-in-out';
+            }, 10);
+        }
+
+        // إضافة animation shake
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+                20%, 40%, 60%, 80% { transform: translateX(10px); }
+            }
+
+            @keyframes confetti-fall {
+                0% {
+                    transform: translateY(0) rotate(0deg);
+                    opacity: 1;
+                }
+                100% {
+                    transform: translateY(300px) rotate(720deg);
+                    opacity: 0;
+                }
+            }
+
+            .confetti {
+                position: fixed;
+                width: 10px;
+                height: 10px;
+                pointer-events: none;
+            }
+
+            .pulse-input {
+                animation: inputPulse 0.6s ease-out;
+            }
+
+            @keyframes inputPulse {
+                0% { box-shadow: 0 0 0 0 rgba(31, 78, 163, 0.45); }
+                70% { box-shadow: 0 0 0 10px rgba(31, 78, 163, 0); }
+                100% { box-shadow: 0 0 0 0 rgba(31, 78, 163, 0); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        function confetti() {
+            const colors = ['#1f4ea3', '#2d68cc', '#7fa3dc', '#2e7d32', '#4f6b95'];
+            
+            for (let i = 0; i < 50; i++) {
+                const confettiPiece = document.createElement('div');
+                confettiPiece.className = 'confetti';
+                confettiPiece.style.left = Math.random() * window.innerWidth + 'px';
+                confettiPiece.style.top = '-10px';
+                confettiPiece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confettiPiece.style.animation = `confetti-fall ${2 + Math.random() * 1}s ease-in forwards`;
+                document.body.appendChild(confettiPiece);
+
+                setTimeout(() => {
+                    confettiPiece.remove();
+                }, 3000);
+            }
+        }
+
+        // تعيين Enter للتنظيم
+        document.getElementById('pathInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                organizeFiles();
+            }
+        });
+
+        // تأثيرات إضافية عند تحميل الصفحة
+        window.addEventListener('load', () => {
+            const container = document.querySelector('.container');
+            container.style.animation = 'slideUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        });
+    </script>
+</body>
+</html>
